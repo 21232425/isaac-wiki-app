@@ -108,16 +108,21 @@ class IsaacWikiAgent:
                 )
                 
                 response_message = response.choices[0].message
-                messages.append(response_message)
+                # 【修复核心】将对象转为纯字典，解决代理 API 兼容性导致的“失忆”问题
+                messages.append(response_message.model_dump(exclude_none=True))
 
-                # 如果模型没有调用工具，说明它认为已经收集到足够信息，给出了最终回答
+                # 如果模型没有调用工具，说明它认为已经收集到足够信息
                 if not response_message.tool_calls:
                     final_answer_text = response_message.content
                     break
 
-                # 如果模型决定调用工具，执行相应的本地代码
+                # 如果模型决定调用工具
                 for tool_call in response_message.tool_calls:
                     function_name = tool_call.function.name
+                    
+                    # 【增加监控】把 Agent 大脑里的想法打印在终端里！
+                    print(f"👀 [Agent 思考中] 决定调用: {function_name}, 参数: {tool_call.function.arguments}")
+                    
                     try:
                         args = json.loads(tool_call.function.arguments)
                     except json.JSONDecodeError:
