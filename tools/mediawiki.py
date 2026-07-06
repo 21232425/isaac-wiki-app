@@ -12,11 +12,8 @@ from dataclasses import dataclass
 
 API_URL = "https://isaac.huijiwiki.com/api.php"
 WIKI_BASE_URL = "https://isaac.huijiwiki.com/wiki/"
-USER_AGENT = (
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-    "AppleWebKit/537.36 (KHTML, like Gecko) "
-    "Chrome/126.0 Safari/537.36 NLR-demo-isaac-wiki-agent/0.1"
-)
+# 伪装成纯净的最新版 Chrome 浏览器，不要带任何自定义后缀
+USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
 
 
 @dataclass
@@ -108,10 +105,18 @@ def _request_json(params: dict[str, str]) -> dict:
     req = urllib.request.Request(
         f"{API_URL}?{query}",
         headers={
-            "Accept": "application/json",
-            "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
-            "Referer": "https://isaac.huijiwiki.com/wiki/%E9%A6%96%E9%A1%B5",
+            "Accept": "application/json, text/javascript, */*; q=0.01",
+            "Accept-Language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7",
+            "Referer": "https://isaac.huijiwiki.com/",
+            "Origin": "https://isaac.huijiwiki.com",
             "User-Agent": USER_AGENT,
+            # 下面这些 Sec- 开头的请求头是绕过现代防火墙的关键
+            "Sec-Ch-Ua": '"Chromium";v="124", "Google Chrome";v="124", "Not-A.Brand";v="99"',
+            "Sec-Ch-Ua-Mobile": "?0",
+            "Sec-Ch-Ua-Platform": '"Windows"',
+            "Sec-Fetch-Dest": "empty",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Site": "same-origin",
         },
     )
 
