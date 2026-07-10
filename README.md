@@ -1,5 +1,7 @@
 # 👼 以撒的结合 Wiki 智能助手 (Isaac Wiki Agent)
 
+*本readme文件纯由AI生成，谨慎参考
+
 这是一个基于大语言模型（LLM）和 Tool-Calling（工具调用）架构开发的《以撒的结合：忏悔》中文 Wiki 智能查询助手。
 
 通过自然语言对话，助手能够自动推测意图、提取关键词，并自主调用工具检索和阅读 [以撒中文 HuijiWiki](https://isaac.huijiwiki.com/)，为玩家提供精准、详细的游戏资料解答。
