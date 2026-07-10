@@ -5,6 +5,32 @@ from true_agent import IsaacWikiAgent  # 直接引入你写好的 Agent
 # 设置网页标题和布局
 st.set_page_config(page_title="以撒 Wiki 智能助手", page_icon="👼", layout="centered")
 
+# ================= 密码拦截模块 =================
+# 初始化登录状态
+if "authenticated" not in st.session_state:
+    st.session_state.authenticated = False
+
+# 如果未登录，显示密码输入界面并阻止后续代码运行
+if not st.session_state.authenticated:
+    st.title("🔒 访问受限")
+    st.caption("请输入密码以使用以撒 Wiki 智能助手")
+    
+    # 密码输入框，type="password" 会将输入内容显示为星号
+    password = st.text_input("请输入密码：", type="password")
+    
+    if st.button("进入系统"):
+        if password == "21232425":
+            st.session_state.authenticated = True
+            st.success("密码正确！正在加载助手...")
+            st.rerun()  # 刷新页面，跳过登录界面进入主程序
+        else:
+            st.error("密码错误，请重新输入。")
+            
+    # 重要：阻止未输入正确密码的用户执行后续的 Agent 初始化和聊天代码
+    st.stop()
+# ================================================
+
+# 下方的代码只有在 st.session_state.authenticated 为 True 时才会执行
 st.title("👼 以撒的结合 Wiki 智能助手")
 st.caption("基于 DeepSeek 与 Tool-Calling 架构，直接检索中文 HuijiWiki。")
 
